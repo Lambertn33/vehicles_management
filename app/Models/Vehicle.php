@@ -60,4 +60,34 @@ class Vehicle extends Model
     {
         return $this->belongsTo(Department::class, 'department_id', 'id');
     }
+
+    /**
+     * Get the assurance for the Vehicle
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function assurance(): HasMany
+    {
+        return $this->hasOne(VehicleAssurance::class, 'vehicle_id', 'id');
+    }
+
+    /**
+     * Get all of the taxes for the Vehicle
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function taxes(): HasMany
+    {
+        return $this->hasMany(VehicleTax::class, 'vehicle_id', 'id');
+    }
+
+    /**
+     * Get all of the attachments for the Vehicle
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function attachments(): HasMany
+    {
+        return $this->hasMany(Attachment::class, 'vehicle_id', 'id');
+    }
 }

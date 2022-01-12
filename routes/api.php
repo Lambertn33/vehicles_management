@@ -24,6 +24,7 @@ Route::prefix('v1')->middleware('json')->group(function(){
          Route::prefix('vehicles')->group(function(){
              Route::prefix('drivers')->group(function(){
                  Route::get('/',[VehiclesController::class,'getAllDrivers']);
+                 Route::get('/freeDrivers',[VehiclesController::class,'getAllFreeDrivers']);
                  Route::post('/',[VehiclesController::class,'addNewDriver']);
              });
              Route::prefix('types')->group(function(){
@@ -37,7 +38,20 @@ Route::prefix('v1')->middleware('json')->group(function(){
                         Route::post('/',[VehiclesController::class,'createNewVehicheTypeCategory']);
                         //single category
                         Route::prefix('/{categoryId}')->group(function(){
-                            Route::get('/',[VehiclesController::class,'getSingleCategoryVehicles']);
+                            Route::get('/',[VehiclesController::class,'viewSingleCategory']);
+                            Route::prefix('vehicles')->group(function(){
+                                Route::get('/',[VehiclesController::class,'getSingleCategoryVehicles']);
+                                Route::post('/',[VehiclesController::class,'addNewVehicle']);
+                                Route::prefix('/{vehicle}')->group(function(){
+                                    Route::get('/',[VehiclesController::class,'viewSingleVehicle']);
+                                    Route::put('/assignDriverToVehicle',[VehiclesController::class,'assignDriverToVehicle']);
+                                    Route::put('/detachDriverToVehicle',[VehiclesController::class,'detachDriverToVehicle']);
+                                    Route::prefix('taxes')->group(function(){
+                                        Route::get('/',[VehiclesController::class,'viewVehicleTaxes']);
+                                        Route::post('/',[VehiclesController::class,'addNewVehicleTax']);
+                                    });
+                                });
+                            });
                         });
                     });
                 });

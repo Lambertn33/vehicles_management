@@ -37,7 +37,7 @@ class VehicleCategory extends Model
      */
     public function vehicles(): HasMany
     {
-        return $this->hasMany(Vehicle::class, 'type_id', 'id');
+        return $this->hasMany(Vehicle::class, 'category_id', 'id');
     }
 
 }
