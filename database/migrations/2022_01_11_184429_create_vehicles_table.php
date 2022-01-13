@@ -18,7 +18,7 @@ class CreateVehiclesTable extends Migration
             $table->uuid('type_id');
             $table->uuid('category_id');
             $table->uuid('department_id');
-            $table->uuid('driver_id')->nullable();
+            $table->uuid('driver_id')->nullable()->default(NULL);
             $table->string('brand');
             $table->string('model');
             $table->string('plate_no');
