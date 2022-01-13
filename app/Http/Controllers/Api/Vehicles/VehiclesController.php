@@ -245,7 +245,7 @@ class VehiclesController extends Controller
                 'model'=>$data['model'],
                 'plate_no'=>$data['plate_no'],
                 'acquisition_date'=>$data['acquisition_date'],
-                'is_assured'=>$data['is_assured'],
+                'is_assured'=>false,
                 'created_at'=>now(),
                 'updated_at'=>now()
             ];
