@@ -20,6 +20,9 @@ Route::prefix('v1')->middleware('json')->group(function(){
     Route::post('/auth/login',[AuthController::class,'login']);
     Route::middleware('auth:api')->group(function(){
         Route::post('/auth/logout', [AuthController::class, 'logout']);
+        Route::prefix('departments')->group(function(){
+            Route::get('/',[VehiclesController::class,'getAllDepartments']);
+        });
         //vehicle Types
          Route::prefix('vehicles')->group(function(){
              Route::prefix('drivers')->group(function(){

@@ -8,6 +8,7 @@ use App\Models\Vehicle;
 use App\Models\VehicleCategory;
 use App\Models\VehicleTax;
 use App\Models\VehicleType;
+use App\Models\Department;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
@@ -554,6 +555,16 @@ class VehiclesController extends Controller
              'message' => 'an error occured..please try again',
          ], 500);
         }
+    }
+
+    public function getAllDepartments()
+    {
+        $allDepartments = Department::get();
+        return Response::json([
+            'status'  => 200,
+            'message' => 'all departments available',
+            'data'=>$allDepartments
+        ], 200);
     }
 
 }
