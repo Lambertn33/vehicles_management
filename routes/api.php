@@ -24,6 +24,7 @@ Route::prefix('v1')->middleware('json')->group(function(){
         //dashboard
         Route::prefix('dashboard')->group(function(){
             Route::get('/',[DashboardController::class,'getDashboardOverview']);
+            Route::post('/searchVehicle',[DashboardController::class,'searchVehicle']);
         });
         //departments
         Route::prefix('departments')->group(function(){

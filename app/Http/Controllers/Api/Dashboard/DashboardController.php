@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Dashboard;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Response;
 use App\Models\VehicleCategory;
 use App\Models\Vehicle;
 use App\Models\VehicleType;
@@ -84,10 +85,176 @@ class DashboardController extends Controller
             'charts_data'=>$chartsData,
             'latest_added_data'=>$latestAddedData
         ];
-        return $data;
+        return Response::json([
+            'status'  => 200,
+            'message' => 'Dashboard overview',
+            'data'=>$data
+        ], 200);
     }
-    public function searchCar()
+    public function searchVehicle(Request $request)
     {
-        
+        $type = $request->input('type');
+        $category = $request->input('category');
+        $department = $request->input('department');
+        $is_taxed = $request->input('is_taxed');
+        $is_insured = $request->input('is_insured');
+        $searchResults = [];
+        $data = [];
+        $mainQuery = Vehicle::where('type_id',$type)
+                  ->where('category_id',$category);
+        if(!$type || !$category){
+            return Response::json([
+                'status'  => 404,
+                'message' => 'The Type and Category are mandatory',
+            ], 404);
+        }
+        //search with only type && category
+        if(!$department && !$is_taxed && !$is_insured){
+            $searchResults = $mainQuery->get();
+        }
+        //search with only type && category && department
+        if($department && !$is_taxed && !$is_insured){
+            $searchResults = $mainQuery
+            ->where('department_id',$department)
+            ->get();
+        }
+        //search with only type && category && tax status
+        if(!$department && $is_taxed && !$is_insured){
+            if($is_taxed ==="yes"){
+                //vehicles with taxes
+                $searchResults =$mainQuery
+                ->where('is_taxed',true)
+                ->get();
+            }else{
+                // vehicles with no taxes
+                $searchResults =$mainQuery
+                ->where('is_taxed',false)
+                ->get();
+            }
+        }
+        //search with only type && category && tax status
+        if(!$department && !$is_taxed && $is_insured){
+            if($is_insured ==="yes"){
+                //vehicles with taxes
+                $searchResults =$mainQuery
+                ->where('is_assured',true)
+                ->get();
+            }else{
+                // vehicles with no taxes
+                $searchResults =$mainQuery
+                ->where('is_assured',false)
+                ->get();
+            }
+        }
+        //search with only type && category && department && tax status
+        if($department && $is_taxed && !$is_insured){
+            // vehicles with taxes
+            if($is_taxed ==="yes"){
+                $searchResults =$mainQuery
+                ->where('department_id',$department)
+                ->where('is_taxed',true)
+                ->get();
+            }else{
+                // vehicles with no taxes
+                $searchResults =$mainQuery
+                ->where('department_id',$department)
+                ->where('is_taxed',false)
+                ->get();
+            }
+        }
+        //search with only type && category && department && insurance status
+        if($department && !$is_taxed && $is_insured){
+            // vehicles with taxes
+            if($is_insured ==="yes"){
+                $searchResults = $mainQuery
+                ->where('department_id',$department)
+                ->where('is_assured',true)
+                ->get();
+            }else{
+                // vehicles with no taxes
+                $searchResults = $mainQuery
+                ->where('department_id',$department)
+                ->where('is_assured',false)
+                ->get();
+            }
+        }
+        //search with only type && category && tax status && insurance status
+        if(!$department && $is_taxed && $is_insured){
+            // vehicles with taxes and insurances
+              if($is_insured ==="yes" && $is_taxed ==="yes"){
+                $searchResults = $mainQuery
+                ->where('is_assured',true)
+                ->where('is_taxed',true)
+                ->get();
+              }
+              if($is_insured ==="yes" && $is_taxed ==="no"){
+                $searchResults = $mainQuery
+                ->where('is_assured',true)
+                ->where('is_taxed',false)
+                ->get();
+              }
+              if($is_insured ==="no" && $is_taxed ==="yes"){
+                $searchResults = $mainQuery
+                ->where('is_assured',false)
+                ->where('is_taxed',true)
+                ->get();
+              }
+              if($is_insured ==="no" && $is_taxed ==="no"){
+                $searchResults = $mainQuery
+                ->where('is_assured',false)
+                ->where('is_taxed',false)
+                ->get();
+              }
+        }
+        //search with all
+        if($department && $is_taxed && $is_insured){
+            // vehicles with taxes and insurances
+              if($is_insured ==="yes" && $is_taxed ==="yes"){
+                $searchResults = $mainQuery
+                ->where('is_assured',true)
+                ->where('is_taxed',true)
+                ->where('department_id',$department)
+                ->get();
+              }
+              if($is_insured ==="yes" && $is_taxed ==="no"){
+                $searchResults = $mainQuery
+                ->where('is_assured',true)
+                ->where('is_taxed',false)
+                ->where('department_id',$department)
+                ->get();
+              }
+              if($is_insured ==="no" && $is_taxed ==="yes"){
+                $searchResults = $mainQuery
+                ->where('is_assured',false)
+                ->where('is_taxed',true)
+                ->where('department_id',$department)
+                ->get();
+              }
+              if($is_insured ==="no" && $is_taxed ==="no"){
+                $searchResults = $mainQuery
+                ->where('is_assured',false)
+                ->where('is_taxed',false)
+                ->where('department_id',$department)
+                ->get();
+              }
+        }
+        foreach ($searchResults as $result) {
+            $data[] = [
+                'id'=>$result->id,
+                'type'=>$result->type->name,
+                'category'=>$result->category->name,
+                'department'=>$result->department->name,
+                'driver'=>$result->driver->names,
+                'brand'=>$result->brand,
+                'model'=>$result->model,
+                'plate_no'=>$result->plate_no,
+                'acquisition_date'=>$result->acquisition_date
+            ];
+        }
+        return Response::json([
+            'status'  => 200,
+            'message' => 'search results',
+            'data'=>$data
+        ], 200);
     }
 }
