@@ -62,8 +62,8 @@ class DashboardController extends Controller
             'uninsured_vehicles'=>$uninsuredVehicles,
         ];
         $vehiclesPerTax[]=[
-            'insured_vehicles'=>$taxedVehicles,
-            'uninsured_vehicles'=>$unTaxedVehicles,
+            'taxed_vehicles'=>$taxedVehicles,
+            'unTaxed_vehicles'=>$unTaxedVehicles,
         ];
         $cardsData = [
             'total_vehicles'=>$totalVehicles,
