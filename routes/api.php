@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\Auth\AuthController;
 use App\Http\Controllers\Api\Vehicles\VehiclesController;
+use App\Http\Controllers\Api\Dashboard\DashboardController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,6 +21,11 @@ Route::prefix('v1')->middleware('json')->group(function(){
     Route::post('/auth/login',[AuthController::class,'login']);
     Route::middleware('auth:api')->group(function(){
         Route::post('/auth/logout', [AuthController::class, 'logout']);
+        //dashboard
+        Route::prefix('dashboard')->group(function(){
+            Route::get('/',[DashboardController::class,'getDashboardOverview']);
+        });
+        //departments
         Route::prefix('departments')->group(function(){
             Route::get('/',[VehiclesController::class,'getAllDepartments']);
         });
