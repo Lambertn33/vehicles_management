@@ -37,6 +37,20 @@ class DriverSeeder extends Seeder
                 'created_at'=>now(),
                 'updated_at'=>now()
             ),
+            3 =>array(
+                'id'=>'d7968ebd-ebbc-4a8c-8c69-c4056bdc1a25',
+                'names'=>'Driver 4',
+                'is_occupied'=>false,
+                'created_at'=>now(),
+                'updated_at'=>now()
+            ),
+            4 =>array(
+                'id'=>'e39d08e6-ca39-46c7-8c54-e11cbef66f23',
+                'names'=>'Driver 5',
+                'is_occupied'=>false,
+                'created_at'=>now(),
+                'updated_at'=>now()
+            ),
         ));
     }
 }
