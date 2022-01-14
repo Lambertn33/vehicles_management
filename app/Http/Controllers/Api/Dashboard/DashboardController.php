@@ -22,13 +22,16 @@ class DashboardController extends Controller
         $latestAddedData = [];
         $latestAddedVehicles = Vehicle::latest()->limit('4')->get();
         $latestVehicles = [];
+        $taxedVehicles = Vehicle::where('is_taxed',true)->count();
         $totalCategories = VehicleCategory::count();
         $totalDrivers = Driver::count();
         $totalVehicles = Vehicle::count();
         $uninsuredVehicles = Vehicle::where('is_assured',false)->count();
+        $unTaxedVehicles = Vehicle::where('is_taxed',false)->count();
         $vehiclesPerDepartment= [];
-        $vehiclesPerType = [];
         $vehiclesPerInsurance = [];
+        $vehiclesPerTax = [];
+        $vehiclesPerType = [];
         $vehicleTypes = VehicleType::get();
         foreach($latestAddedVehicles as $vehicle){
             $latestVehicles[] = [
@@ -58,6 +61,10 @@ class DashboardController extends Controller
             'insured_vehicles'=>$insuredVehicles,
             'uninsured_vehicles'=>$uninsuredVehicles,
         ];
+        $vehiclesPerTax[]=[
+            'insured_vehicles'=>$taxedVehicles,
+            'uninsured_vehicles'=>$unTaxedVehicles,
+        ];
         $cardsData = [
             'total_vehicles'=>$totalVehicles,
             'total_vehicle_categories'=>$totalCategories,
@@ -66,7 +73,8 @@ class DashboardController extends Controller
         $chartsData = [
             'vehicles_per_type'=>$vehiclesPerType,
             'vehicles_per_department'=>$vehiclesPerDepartment,
-            'vehicles_per_insurance'=>$vehiclesPerInsurance
+            'vehicles_per_insurance'=>$vehiclesPerInsurance,
+            'vehicles_per_tax'=>$vehiclesPerTax
         ];
         $latestAddedData = [
             'latest_vehicles'=>$latestVehicles
@@ -77,5 +85,9 @@ class DashboardController extends Controller
             'latest_added_data'=>$latestAddedData
         ];
         return $data;
+    }
+    public function searchCar()
+    {
+        
     }
 }

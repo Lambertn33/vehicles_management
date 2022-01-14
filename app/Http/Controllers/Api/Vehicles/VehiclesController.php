@@ -225,9 +225,7 @@ class VehiclesController extends Controller
                 ], 404);
             }
             $data = $request->all();
-            $checkPlateNo = Vehicle::where('type_id',$type)
-            ->where('category_id',$category)
-            ->where('plate_no',$data['plate_no']);
+            $checkPlateNo = Vehicle::where('plate_no',$data['plate_no']);
             if($checkPlateNo->exists())
             {
                 return Response::json([
@@ -246,6 +244,7 @@ class VehiclesController extends Controller
                 'plate_no'=>$data['plate_no'],
                 'acquisition_date'=>$data['acquisition_date'],
                 'is_assured'=>false,
+                'is_taxed'=>false,
                 'created_at'=>now(),
                 'updated_at'=>now()
             ];
@@ -377,6 +376,9 @@ class VehiclesController extends Controller
                 'to'=>$to
             ];
             VehicleTax::insert($newTax);
+            Vehicle::where('id',$vehicle)->update([
+                'is_taxed'=>true
+            ]);
             return Response::json([
                 'status'  => 200,
                 'message' => 'New Tax inserted successfully',

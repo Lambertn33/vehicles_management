@@ -12,7 +12,7 @@ class Vehicle extends Model
 {
     use HasFactory ,Uuids;
     protected $fillable = [
-        'id','type_id','category_id','brand','model','plate_no','acquisition_date','department_id','driver_id','is_assured'
+        'id','type_id','category_id','brand','model','plate_no','acquisition_date','department_id','driver_id','is_assured','is_taxed'
     ];
     protected $casts = [
         'id'=>'string',
